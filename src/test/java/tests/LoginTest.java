@@ -22,12 +22,10 @@ public class LoginTest extends TestBase {
                     .formParam("username",TestData.getUsername())
                     .formParam("password", TestData.getPassword())
                     .request()
-            .when()
-                    .post("https://sandbox.whapi.com/v1/sessions/tickets");
+        .when()
+        .post("https://sandbox.whapi.com/v1/sessions/tickets");
 
-    Assert.assertEquals(201, response.getStatusCode());
+        Assert.assertEquals(201, response.getStatusCode());
 
-    System.out.println(response.asString());
-
-  }
+        }
 }
