@@ -21,8 +21,7 @@ public class Accounts extends TestBase {
 
             .when()
                     .get("accounts/me");
-    System.out.println(config.getAuthenticationTicket());
-    System.out.println(response.asString());
+    Assert.assertEquals("200", response.statusCode());
   }
   @Test
   public void getAccountDetails_True2(){
@@ -36,8 +35,5 @@ public class Accounts extends TestBase {
 
             .when()
                     .get("accounts/me");
-
-    System.out.println(config.getAuthenticationTicket());
-    System.out.println(response.asString());
   }
 }

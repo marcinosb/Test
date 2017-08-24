@@ -11,6 +11,16 @@ public class TestData {
   private String acceptedType = "application/json";
   private String authenticationTicket = null;
 
+  private String firstName = "Cue";
+  private String lastName = "Ae";
+  private String country = "United Kingdom";
+  private String accountId = "118";
+  private String accountNum = "41535YV";
+  private String city = "";
+  private String contactable = "Y";
+  private String countryCode = "GB";
+  private String customerId = "118";
+
   public String getAuthenticationTicket() {
     return authenticationTicket;
   }
