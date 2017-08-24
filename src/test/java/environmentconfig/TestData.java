@@ -2,39 +2,48 @@ package environmentconfig;
 
 public class TestData {
 
-  private static final String hostUrl = "https://sandbox.whapi.com/";
-  private static final String apikey = "l7xxdbad8c0b183147f99f464f42ded229be";
-  private static final String apiSecret = "35ba66acb7b64e2ea8dd895dd27616f5";
-  private static final String username = "QASDET1";
-  private static final String password = "QAAPI1";
-  public static final String contentType = "application/x-www-form-urlencoded";
-  public static final String acceptedType = "application/json";
+  private String hostUrl = "https://sandbox.whapi.com/";
+  private String apikey = "l7xxdbad8c0b183147f99f464f42ded229be";
+  private String apiSecret = "35ba66acb7b64e2ea8dd895dd27616f5";
+  private String username = "QASDET1";
+  private String password = "QAAPI1";
+  private String contentType = "application/x-www-form-urlencoded";
+  private String acceptedType = "application/json";
+  private String authenticationTicket = null;
 
-  public static String getAcceptedType() {
+  public String getAuthenticationTicket() {
+    return authenticationTicket;
+  }
+
+  public void setAuthenticationTicket(String authenticationTicket) {
+    this.authenticationTicket = authenticationTicket;
+  }
+
+  public  String getAcceptedType() {
     return acceptedType;
   }
 
-  public static String getContentType() {
+  public  String getContentType() {
     return contentType;
   }
 
-  public static String getHostUrl() {
+  public  String getHostUrl() {
     return hostUrl;
   }
 
-  public static String getApikey() {
+  public  String getApikey() {
     return apikey;
   }
 
-  public static String getApiSecret() {
+  public  String getApiSecret() {
     return apiSecret;
   }
 
-  public static String getUsername() {
+  public  String getUsername() {
     return username;
   }
 
-  public static String getPassword() {
+  public  String getPassword() {
     return password;
   }
 }
