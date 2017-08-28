@@ -10,7 +10,6 @@ public class TestData {
   private String contentType = "application/x-www-form-urlencoded";
   private String acceptedType = "application/json";
   private String authenticationTicket = null;
-
   private String firstName = "Cue";
   private String lastName = "Ae";
   private String country = "United Kingdom";
@@ -20,6 +19,12 @@ public class TestData {
   private String contactable = "Y";
   private String countryCode = "GB";
   private String customerId = "118";
+
+  public String getBalance() {
+    return balance;
+  }
+
+  private String balance = "1000.00";
 
   public String getAuthenticationTicket() {
     return authenticationTicket;
@@ -39,6 +44,42 @@ public class TestData {
 
   public  String getHostUrl() {
     return hostUrl;
+  }
+
+  public String getFirstName() {
+    return firstName;
+  }
+
+  public String getLastName() {
+    return lastName;
+  }
+
+  public String getCountry() {
+    return country;
+  }
+
+  public String getAccountId() {
+    return accountId;
+  }
+
+  public String getAccountNum() {
+    return accountNum;
+  }
+
+  public String getCity() {
+    return city;
+  }
+
+  public String getContactable() {
+    return contactable;
+  }
+
+  public String getCountryCode() {
+    return countryCode;
+  }
+
+  public String getCustomerId() {
+    return customerId;
   }
 
   public  String getApikey() {

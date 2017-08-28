@@ -1,6 +1,5 @@
 package tests;
 
-import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import org.junit.Assert;
 import org.junit.Test;
@@ -23,16 +22,10 @@ public class LoginTest extends TestBase {
                     .formParam("password", config.getPassword())
                     .request()
             .when()
-                    .post("https://sandbox.whapi.com/v1/sessions/tickets");
-    String auth = response
-            .then()
-            .contentType(ContentType.JSON)
-            .extract()
-            .path("whoSessions.ticket");
-    Assert.assertEquals(201, response.statusCode());
+                    .post("sessions/tickets");
 
-    System.out.println(config.getAuthenticationTicket());
-    }
+    Assert.assertEquals(201, response.statusCode());
+  }
 
   @Test
   public void getAuthenticationTicket_False(){
@@ -40,7 +33,6 @@ public class LoginTest extends TestBase {
     Response response =
             given()
                     .contentType(config.getContentType())
-                    //.header("Content-Type","application/x-www-form-urlencoded")
                     .header("who-apiKey", config.getApikey())
                     .header("who-secret", config.getApiSecret())
                     .header("Accept", config.getAcceptedType())
@@ -48,14 +40,7 @@ public class LoginTest extends TestBase {
                     .formParam("password", config.getPassword())
                     .request()
             .when()
-                    .post("https://sandbox.whapi.com/v1/sessions/tickets");
-
-    System.out.println(response.asString());
-    String faultCode = response
-            .then()
-            .contentType(ContentType.JSON)
-            .extract()
-            .path("whoFaults[0].faultCode");
+                    .post("sessions/tickets");
 
     Assert.assertEquals(401, response.statusCode());
   }
@@ -65,14 +50,12 @@ public class LoginTest extends TestBase {
 
     Response response =
             given()
-                    //.contentType(config.getContentType())
-                    //.header("Content-Type","application/x-www-form-urlencoded")
                     .header("who-apiKey", config.getApikey())
                     .header("who-secret", config.getApiSecret())
                     .header("Accept", config.getAcceptedType())
             .when()
                     .contentType(config.getContentType())
-                    .head("https://sandbox.whapi.com/v1/sessions/tickets/" + config.getAuthenticationTicket());
+                    .head("sessions/tickets/" + config.getAuthenticationTicket());
 
     Assert.assertEquals(204, response.statusCode());
   }

@@ -35,7 +35,7 @@ public class TestBase {
                     .formParam("password", config.getPassword())
                     .request()
                     .when()
-                    .post("https://sandbox.whapi.com/v1/sessions/tickets");
+                    .post("sessions/tickets");
     String auth = response
             .then()
             .contentType(ContentType.JSON)
@@ -43,6 +43,7 @@ public class TestBase {
             .path("whoSessions.ticket");
     config.setAuthenticationTicket(auth);
     Assert.assertEquals(201, response.statusCode());
+    System.out.println(config.getAuthenticationTicket());
     }
 
   @AfterClass
