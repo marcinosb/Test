@@ -75,18 +75,13 @@ public class Accounts extends TestBase {
                     .header("Accept", config.getAcceptedType())
                     .when()
                     .get("accounts/me/balance");
-
-    System.out.println(response.asString());
-
     String balance
             = response.then()
             .contentType(ContentType.JSON)
             .extract()
             .path("whoAccounts.account.balance");
 
-    Assert.assertEquals(config.getBalance(),balance);
+    config.setBalance(balance);
+    Assert.assertEquals(200,response.getStatusCode());
   }
-
-
-
 }

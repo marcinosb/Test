@@ -10,45 +10,92 @@ import org.junit.Assert;
 import org.junit.Before;
 import environmentconfig.TestData;
 import org.junit.BeforeClass;
-
 import java.util.List;
 import java.util.Random;
-
 import static com.jayway.restassured.RestAssured.given;
-import static com.jayway.restassured.path.xml.XmlPath.with;
 
 public class TestBase {
 
   public static TestData config;
 
-  public static void getRandomEvent(Response response) {
+  /* Get random event */
+  public static String getRandomEvent() {
+
+    Response response =
+            given()
+                    //.contentType()
+                    .header("who-apiKey", config.getApikey())
+                    .header("who-secret", config.getApiSecret())
+                    .header("who-ticket", config.getAuthenticationTicket())
+                    .header("Accept", "application/vnd.who.Sportsbook+xml;v=1;charset=utf-8")
+                    .when()
+                    .get("competitions/events/inplay/live");
 
     Random rand = new Random();
-    int eventNum = with(response.asString()).get("whoCompetitions.category.size()");
-    int randomCategory = rand.nextInt(eventNum);
-    List<Node> events = with(response.asString()).get("whoCompetitions.category");
+    XmlPath xmlPath = new XmlPath(response.asString());
+
+    List<Node> linkNodes = xmlPath.getList("depthFirst().findAll { it.name() == 'event' }");
+    int randomEvent = rand.nextInt(linkNodes.size());
+
+    return linkNodes.get(0).getAttribute("id");
+  }
+
+  public static void getPricesOnRandomOutcome(String event){
+
+    Random rand = new Random();
+    Response response =
+            given()
+                    .header("who-apiKey", config.getApikey())
+                    .header("who-secret", config.getApiSecret())
+                    .header("who-ticket", config.getAuthenticationTicket())
+                    .header("Accept", "application/vnd.who.Sportsbook+xml;v=1;charset=utf-8")
+                    .when()
+                    .get("competitions/events/"+event+"/markets/outcomes");
 
     XmlPath xmlPath = new XmlPath(response.asString());
-    List<Node> linkNodes = xmlPath.getList("depthFirst().findAll { it.name() == 'event' } ");
-    System.out.println(linkNodes.size());
+    List<Node> outcomes = xmlPath.getList("depthFirst().findAll { it.name() == 'outcome' }");
+    int randomEvent = rand.nextInt(outcomes.size());
+
+    config.setOutcomeId(outcomes.get(0).getAttribute("id"));
+    config.setPriceNum(outcomes.get(0).getNode("odds").getNode("livePrice").getNode("priceNum").value());
+    config.setPriceDen(outcomes.get(0).getNode("odds").getNode("livePrice").getNode("priceDen").value());
+    config.setPriceFrac(outcomes.get(0).getNode("odds").getNode("livePrice").getNode("priceFrac").value());
+    config.setPriceDec(outcomes.get(0).getNode("odds").getNode("livePrice").getNode("priceDec").value());
+
+    System.out.println(outcomes.size());
+    System.out.println(outcomes.get(0));
 
   }
-  public static int randInt(int max) {
 
-    Random rand = new Random();
-
-    int randomNum = rand.nextInt((max + 1));
-
-    return randomNum;
+  /* Get actual user balance */
+  public static void getBalance(){
+    Response response =
+            given()
+                    .contentType(config.getContentType())
+                    .header("who-apiKey", config.getApikey())
+                    .header("who-secret", config.getApiSecret())
+                    .header("who-ticket", config.getAuthenticationTicket())
+                    .header("Accept", config.getAcceptedType())
+                    .when()
+                    .get("accounts/me/balance");
+    String balance
+            = response.then()
+            .contentType(ContentType.JSON)
+            .extract()
+            .path("whoAccounts.account.balance");
+    config.setBalance(balance);
   }
 
   @BeforeClass
+  /* Setup a environment defaults */
   public static void setUp(){
     config = new TestData();
     RestAssured.baseURI = "https://sandbox.whapi.com";
     RestAssured.basePath = "/v1/";
   }
+
   @Before
+  /* Get a authentication ticket */
   public void preconditions(){
 
     Response response =
@@ -70,9 +117,10 @@ public class TestBase {
             .path("whoSessions.ticket");
     config.setAuthenticationTicket(auth);
     Assert.assertEquals(201, response.statusCode());
-    }
+  }
 
   @AfterClass
+  /* Remove a config */
   public static void tearDown(){
     config = null;
   }

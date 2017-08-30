@@ -19,12 +19,70 @@ public class TestData {
   private String contactable = "Y";
   private String countryCode = "GB";
   private String customerId = "118";
+  private String priceNum = null;
+  private String priceDen = null;
+  private String priceFrac = null;
+  private String priceDec = null;
+  private String status = null;
+  private String outcomeId = null;
 
-  public String getBalance() {
+  public String getPriceNum() {
+    return priceNum;
+  }
+
+  public void setPriceNum(String priceNum) {
+    this.priceNum = priceNum;
+  }
+
+  public String getPriceDen() {
+    return priceDen;
+  }
+
+  public void setPriceDen(String priceDen) {
+    this.priceDen = priceDen;
+  }
+
+  public String getPriceFrac() {
+    return priceFrac;
+  }
+
+  public void setPriceFrac(String priceFrac) {
+    this.priceFrac = priceFrac;
+  }
+
+  public String getPriceDec() {
+    return priceDec;
+  }
+
+  public void setPriceDec(String priceDec) {
+    this.priceDec = priceDec;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
+  }
+
+  public String getOutcomeId() {
+    return outcomeId;
+  }
+
+  public void setOutcomeId(String outcomeId) {
+    this.outcomeId = outcomeId;
+  }
+
+  public double getBalance() {
     return balance;
   }
 
-  private String balance = "1000.00";
+  public void setBalance(String balance) {
+    this.balance = Double.parseDouble(balance);
+  }
+
+  private double balance = 0.00;
 
   public String getAuthenticationTicket() {
     return authenticationTicket;

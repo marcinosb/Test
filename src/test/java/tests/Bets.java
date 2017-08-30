@@ -13,6 +13,10 @@ public class Bets extends TestBase{
 
   @Test
   public void ZplaceABet() {
+
+    getBalance();
+    String event = getRandomEvent();
+    getPricesOnRandomOutcome(event);
     Response response =
             given()
                     .contentType(config.getContentType())
@@ -22,16 +26,17 @@ public class Bets extends TestBase{
                     .header("Accept", "application/json")
                     .formParam("legType","W")
                     .formParam("stake", "1.00")
-                    .formParam("outcomeId", "1")
+                    .formParam("outcomeId", config.getOutcomeId())
                     .formParam("priceType", "L")
-                    .formParam("priceNum", "1")
-                    .formParam("priceDen", "4")
+                    .formParam("priceNum", config.getPriceNum())
+                    .formParam("priceDen", config.getPriceDen())
                     .request()
             .when()
                     .post("bets/me/");
 
-    //Assert.assertEquals("200", response.statusCode());
+    Assert.assertEquals(201, response.statusCode());
     System.out.println(response.asString());
+    System.out.println(config.getAuthenticationTicket());
   }
 
   @Test
@@ -45,21 +50,6 @@ public class Bets extends TestBase{
                     .header("Accept", "application/json")
                     .when()
                     .get("bets/me?blockSize=5&blockNum=0&settled=Y");
-    System.out.println(response.asString());
-  }
-
-  @Test
-  public void getFreeBets() {
-    Response response =
-            given()
-                    .contentType(config.getContentType())
-                    .header("who-apiKey", config.getApikey())
-                    .header("who-secret", config.getApiSecret())
-                    .header("who-ticket", config.getAuthenticationTicket())
-                    .header("Accept", "application/json")
-            .when()
-                    .get("bets/me/free");
-
     System.out.println(response.asString());
   }
 }
