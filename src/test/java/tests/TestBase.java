@@ -40,6 +40,7 @@ public class TestBase {
     return linkNodes.get(0).getAttribute("id");
   }
 
+  /*Get prices on the random outcome*/
   public static void getPricesOnRandomOutcome(String event){
 
     Random rand = new Random();
@@ -61,9 +62,9 @@ public class TestBase {
     config.setPriceDen(outcomes.get(0).getNode("odds").getNode("livePrice").getNode("priceDen").value());
     config.setPriceFrac(outcomes.get(0).getNode("odds").getNode("livePrice").getNode("priceFrac").value());
     config.setPriceDec(outcomes.get(0).getNode("odds").getNode("livePrice").getNode("priceDec").value());
-
-    System.out.println(outcomes.size());
-    System.out.println(outcomes.get(0));
+//
+//    System.out.println(outcomes.size());
+//    System.out.println(outcomes.get(0));
 
   }
 

@@ -25,6 +25,15 @@ public class TestData {
   private String priceDec = null;
   private String status = null;
   private String outcomeId = null;
+  private String delayBetId = null;
+
+  public String getDelayBetId() {
+    return delayBetId;
+  }
+
+  public void setDelayBetId(String delayBetId) {
+    this.delayBetId = delayBetId;
+  }
 
   public String getPriceNum() {
     return priceNum;

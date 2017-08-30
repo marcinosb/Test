@@ -3,7 +3,6 @@ package tests;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.path.xml.XmlPath;
 import com.jayway.restassured.response.Response;
-import com.thoughtworks.xstream.XStream;
 import org.junit.Test;
 import java.util.Random;
 
@@ -34,5 +33,6 @@ public class Competitions extends TestBase{
     System.out.println(config.getPriceFrac());
     System.out.println(config.getPriceNum());
     System.out.println(config.getOutcomeId());
+    System.out.println(config.getBalance());
   }
 }
