@@ -37,7 +37,7 @@ public class TestBase {
     List<Node> linkNodes = xmlPath.getList("depthFirst().findAll { it.name() == 'event' }");
     int randomEvent = rand.nextInt(linkNodes.size());
 
-    return linkNodes.get(0).getAttribute("id");
+    return linkNodes.get(randomEvent).getAttribute("id");
   }
 
   /*Get prices on the random outcome*/
@@ -57,11 +57,11 @@ public class TestBase {
     List<Node> outcomes = xmlPath.getList("depthFirst().findAll { it.name() == 'outcome' }");
     int randomEvent = rand.nextInt(outcomes.size());
 
-    config.setOutcomeId(outcomes.get(0).getAttribute("id"));
-    config.setPriceNum(outcomes.get(0).getNode("odds").getNode("livePrice").getNode("priceNum").value());
-    config.setPriceDen(outcomes.get(0).getNode("odds").getNode("livePrice").getNode("priceDen").value());
-    config.setPriceFrac(outcomes.get(0).getNode("odds").getNode("livePrice").getNode("priceFrac").value());
-    config.setPriceDec(outcomes.get(0).getNode("odds").getNode("livePrice").getNode("priceDec").value());
+    config.setOutcomeId(outcomes.get(randomEvent).getAttribute("id"));
+    config.setPriceNum(outcomes.get(randomEvent).getNode("odds").getNode("livePrice").getNode("priceNum").value());
+    config.setPriceDen(outcomes.get(randomEvent).getNode("odds").getNode("livePrice").getNode("priceDen").value());
+    config.setPriceFrac(outcomes.get(randomEvent).getNode("odds").getNode("livePrice").getNode("priceFrac").value());
+    config.setPriceDec(outcomes.get(randomEvent).getNode("odds").getNode("livePrice").getNode("priceDec").value());
 //
 //    System.out.println(outcomes.size());
 //    System.out.println(outcomes.get(0));

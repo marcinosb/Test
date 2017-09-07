@@ -28,7 +28,7 @@ public class Bets extends TestBase{
                     .header("who-ticket", config.getAuthenticationTicket())
                     .header("Accept", "application/xml")
                     .formParam("legType","W")
-                    .formParam("stake", "1.00")
+                    .formParam("stake", "2.00")
                     .formParam("outcomeId", config.getOutcomeId())
                     .formParam("priceType", "L")
                     .formParam("priceNum", config.getPriceNum())
