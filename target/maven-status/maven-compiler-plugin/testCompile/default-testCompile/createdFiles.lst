@@ -1,0 +1,6 @@
+environmentconfig\TestData.class
+tests\Bets.class
+tests\Competitions.class
+tests\Accounts.class
+tests\LoginTest.class
+tests\TestBase.class

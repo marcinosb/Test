@@ -20,8 +20,9 @@ public class Accounts extends TestBase {
             .when()
                     .get("accounts/me");
 
-    Assert.assertEquals("200", response.statusCode());
+    Assert.assertEquals(200, response.statusCode());
   }
+
   @Test
   public void getAccountDetails_AccountDetails_LastName(){
     Response response =

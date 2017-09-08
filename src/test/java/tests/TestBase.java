@@ -18,6 +18,39 @@ public class TestBase {
 
   public static TestData config;
 
+  @BeforeClass
+  /* Setup a environment defaults */
+  public static void setUp(){
+    config = new TestData();
+    RestAssured.baseURI = "https://sandbox.whapi.com";
+    RestAssured.basePath = "/v1/";
+  }
+
+  @Before
+  /* Get a authentication ticket */
+  public void preconditions(){
+
+    Response response =
+            given()
+                    .contentType(config.getContentType())
+                    //.header("Content-Type","application/x-www-form-urlencoded")
+                    .header("who-apiKey", config.getApikey())
+                    .header("who-secret", config.getApiSecret())
+                    .header("Accept", config.getAcceptedType())
+                    .formParam("username",config.getUsername())
+                    .formParam("password", config.getPassword())
+                    .request()
+                    .when()
+                    .post("sessions/tickets");
+    String auth = response
+            .then()
+            .contentType(ContentType.JSON)
+            .extract()
+            .path("whoSessions.ticket");
+    config.setAuthenticationTicket(auth);
+    Assert.assertEquals(201, response.statusCode());
+  }
+
   /* Get random event */
   public static String getRandomEvent() {
 
@@ -85,39 +118,6 @@ public class TestBase {
             .extract()
             .path("whoAccounts.account.balance");
     config.setBalance(balance);
-  }
-
-  @BeforeClass
-  /* Setup a environment defaults */
-  public static void setUp(){
-    config = new TestData();
-    RestAssured.baseURI = "https://sandbox.whapi.com";
-    RestAssured.basePath = "/v1/";
-  }
-
-  @Before
-  /* Get a authentication ticket */
-  public void preconditions(){
-
-    Response response =
-            given()
-                    .contentType(config.getContentType())
-                    //.header("Content-Type","application/x-www-form-urlencoded")
-                    .header("who-apiKey", config.getApikey())
-                    .header("who-secret", config.getApiSecret())
-                    .header("Accept", config.getAcceptedType())
-                    .formParam("username",config.getUsername())
-                    .formParam("password", config.getPassword())
-                    .request()
-                    .when()
-                    .post("sessions/tickets");
-    String auth = response
-            .then()
-            .contentType(ContentType.JSON)
-            .extract()
-            .path("whoSessions.ticket");
-    config.setAuthenticationTicket(auth);
-    Assert.assertEquals(201, response.statusCode());
   }
 
   @AfterClass

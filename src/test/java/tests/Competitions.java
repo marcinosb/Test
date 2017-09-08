@@ -1,14 +1,10 @@
 package tests;
 
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.path.xml.XmlPath;
 import com.jayway.restassured.response.Response;
+import org.junit.Assert;
 import org.junit.Test;
-import java.util.Random;
-
-import static com.jayway.restassured.RestAssured.get;
 import static com.jayway.restassured.RestAssured.given;
-        import static com.jayway.restassured.path.xml.XmlPath.with;
+import static org.junit.Assert.assertEquals;
 
 public class Competitions extends TestBase{
 
@@ -24,15 +20,18 @@ public class Competitions extends TestBase{
                     .when()
                     .get("competitions/events/inplay/live");
 
+    assertEquals(200, response.getStatusCode());
+    System.out.println(response.getStatusCode());
+
     getBalance();
     String event = getRandomEvent();
     getPricesOnRandomOutcome(event);
-
-    System.out.println(config.getPriceDec());
-    System.out.println(config.getPriceDen());
-    System.out.println(config.getPriceFrac());
-    System.out.println(config.getPriceNum());
-    System.out.println(config.getOutcomeId());
-    System.out.println(config.getBalance());
+//
+//    System.out.println(config.getPriceDec());
+//    System.out.println(config.getPriceDen());
+//    System.out.println(config.getPriceFrac());
+//    System.out.println(config.getPriceNum());
+//    System.out.println(config.getOutcomeId());
+//    System.out.println(config.getBalance());
   }
 }

@@ -1,0 +1,17 @@
+<whoBets>
+    <bet>
+        <betNum>1</betNum>
+        <delayBetId>"+config.getDelayBetId()+"</delayBetId>\n" +
+        "\t\t<betTypeCode>SGL</betTypeCode>\n" +
+        "\t\t<stake>1</stake>\n" +
+        "\t\t<leg>\n" +
+            "\t\t\t<legType>W</legType>\n" +
+            "\t\t\t<part>\n" +
+                "\t\t\t\t<outcomeId>"+config.getOutcomeId()+"</outcomeId>\n" +
+                "\t\t\t\t<priceType>L</priceType>\n" +
+                "\t\t\t\t<priceNum>"+config.getPriceNum()+"</priceNum>\n" +
+                "\t\t\t\t<priceDen>"+config.getPriceDen()+"</priceDen>\n" +
+                "\t\t\t</part>\n" +
+            "\t\t</leg>\n" +
+        "\t</bet>\n" +
+    "</whoBets>")

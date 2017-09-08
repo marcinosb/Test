@@ -4,6 +4,7 @@ import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.path.xml.XmlPath;
 import com.jayway.restassured.path.xml.element.Node;
 import com.jayway.restassured.response.Response;
+import environmentconfig.Bet;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -37,8 +38,8 @@ public class Bets extends TestBase{
             .when()
                     .post("bets/me/");
 
-    System.out.println("**********Przed");
-    System.out.println(config.getAuthenticationTicket());
+//    System.out.println("**********Przed");
+//    System.out.println(config.getAuthenticationTicket());
 
     XmlPath xmlPath = response.xmlPath();
     Node whoBets = xmlPath.get("whoBets");
@@ -46,7 +47,36 @@ public class Bets extends TestBase{
     config.setDelayBetId(delayBetId);
     Thread.sleep(Long.parseLong("15000"));
 
+    Bet bet = new Bet("1", config.getDelayBetId(), "SGL", "1", "W",
+            config.getOutcomeId(), "L", config.getPriceDen(), config.getPriceNum());
+
     /////////////////////////////////////////////////////////////////
+//    Response response2 =
+//            given()
+//                    .contentType("application/xml")
+//                    .header("who-apiKey", config.getApikey())
+//                    .header("who-secret", config.getApiSecret())
+//                    .header("who-ticket", config.getAuthenticationTicket())
+//                    .header("Accept", "application/xml")
+//                    .body("<whoBets>\n" +
+//                            "\t<bet>\n" +
+//                            "\t\t<betNum>1</betNum>\n" +
+//                            "\t\t<delayBetId>"+config.getDelayBetId()+"</delayBetId>\n" +
+//                            "\t\t<betTypeCode>SGL</betTypeCode>\n" +
+//                            "\t\t<stake>1</stake>\n" +
+//                            "\t\t<leg>\n" +
+//                            "\t\t\t<legType>W</legType>\n" +
+//                            "\t\t\t<part>\n" +
+//                            "\t\t\t\t<outcomeId>"+config.getOutcomeId()+"</outcomeId>\n" +
+//                            "\t\t\t\t<priceType>L</priceType>\n" +
+//                            "\t\t\t\t<priceNum>"+config.getPriceNum()+"</priceNum>\n" +
+//                            "\t\t\t\t<priceDen>"+config.getPriceDen()+"</priceDen>\n" +
+//                            "\t\t\t</part>\n" +
+//                            "\t\t</leg>\n" +
+//                            "\t</bet>\n" +
+//                            "</whoBets>")
+//            .when()
+//                    .post("bets/me/");
     Response response2 =
             given()
                     .contentType("application/xml")
@@ -54,23 +84,7 @@ public class Bets extends TestBase{
                     .header("who-secret", config.getApiSecret())
                     .header("who-ticket", config.getAuthenticationTicket())
                     .header("Accept", "application/xml")
-                    .body("<whoBets>\n" +
-                            "\t<bet>\n" +
-                            "\t\t<betNum>1</betNum>\n" +
-                            "\t\t<delayBetId>"+config.getDelayBetId()+"</delayBetId>\n" +
-                            "\t\t<betTypeCode>SGL</betTypeCode>\n" +
-                            "\t\t<stake>1</stake>\n" +
-                            "\t\t<leg>\n" +
-                            "\t\t\t<legType>W</legType>\n" +
-                            "\t\t\t<part>\n" +
-                            "\t\t\t\t<outcomeId>"+config.getOutcomeId()+"</outcomeId>\n" +
-                            "\t\t\t\t<priceType>L</priceType>\n" +
-                            "\t\t\t\t<priceNum>"+config.getPriceNum()+"</priceNum>\n" +
-                            "\t\t\t\t<priceDen>"+config.getPriceDen()+"</priceDen>\n" +
-                            "\t\t\t</part>\n" +
-                            "\t\t</leg>\n" +
-                            "\t</bet>\n" +
-                            "</whoBets>")
+                    .body(bet)
             .when()
                     .post("bets/me/");
 
