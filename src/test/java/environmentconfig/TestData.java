@@ -26,6 +26,15 @@ public class TestData {
   private String status = null;
   private String outcomeId = null;
   private String delayBetId = null;
+  private String maxStake = null;
+
+  public String getMaxStake() {
+    return maxStake;
+  }
+
+  public void setMaxStake(String maxStake) {
+    this.maxStake = maxStake;
+  }
 
   public String getDelayBetId() {
     return delayBetId;

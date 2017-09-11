@@ -21,17 +21,10 @@ public class Competitions extends TestBase{
                     .get("competitions/events/inplay/live");
 
     assertEquals(200, response.getStatusCode());
-    System.out.println(response.getStatusCode());
 
     getBalance();
     String event = getRandomEvent();
     getPricesOnRandomOutcome(event);
-//
-//    System.out.println(config.getPriceDec());
-//    System.out.println(config.getPriceDen());
-//    System.out.println(config.getPriceFrac());
-//    System.out.println(config.getPriceNum());
-//    System.out.println(config.getOutcomeId());
-//    System.out.println(config.getBalance());
+
   }
 }

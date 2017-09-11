@@ -1,22 +1,21 @@
 package tests;
 
-import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.path.xml.XmlPath;
 import com.jayway.restassured.path.xml.element.Node;
 import com.jayway.restassured.response.Response;
 import environmentconfig.Bet;
+import environmentconfig.Leg;
+import environmentconfig.Part;
+import environmentconfig.WhoBets;
 import org.junit.Assert;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
 import static com.jayway.restassured.RestAssured.given;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class Bets extends TestBase{
 
   @Test
-  public void ZplaceABet() throws InterruptedException {
+  public void randomBet() throws InterruptedException {
 
     getBalance();
     String event = getRandomEvent();
@@ -38,58 +37,123 @@ public class Bets extends TestBase{
             .when()
                     .post("bets/me/");
 
-//    System.out.println("**********Przed");
-//    System.out.println(config.getAuthenticationTicket());
-
     XmlPath xmlPath = response.xmlPath();
     Node whoBets = xmlPath.get("whoBets");
     String delayBetId = whoBets.getNode("betDelayed").getNode("delayBetId").value();
+
     config.setDelayBetId(delayBetId);
-    Thread.sleep(Long.parseLong("15000"));
+    Thread.sleep(Long.parseLong("10000"));
 
-    Bet bet = new Bet("1", config.getDelayBetId(), "SGL", "1", "W",
-            config.getOutcomeId(), "L", config.getPriceDen(), config.getPriceNum());
+    /*Create a body for the bet*/
+    WhoBets whobets = new WhoBets(
+            new Bet("1", config.getDelayBetId(), "SGL", "2.00",
+                    new Leg("W", new Part(config.getOutcomeId(),
+                            "L", config.getPriceNum(), config.getPriceDen()))));
 
-    /////////////////////////////////////////////////////////////////
-//    Response response2 =
-//            given()
-//                    .contentType("application/xml")
-//                    .header("who-apiKey", config.getApikey())
-//                    .header("who-secret", config.getApiSecret())
-//                    .header("who-ticket", config.getAuthenticationTicket())
-//                    .header("Accept", "application/xml")
-//                    .body("<whoBets>\n" +
-//                            "\t<bet>\n" +
-//                            "\t\t<betNum>1</betNum>\n" +
-//                            "\t\t<delayBetId>"+config.getDelayBetId()+"</delayBetId>\n" +
-//                            "\t\t<betTypeCode>SGL</betTypeCode>\n" +
-//                            "\t\t<stake>1</stake>\n" +
-//                            "\t\t<leg>\n" +
-//                            "\t\t\t<legType>W</legType>\n" +
-//                            "\t\t\t<part>\n" +
-//                            "\t\t\t\t<outcomeId>"+config.getOutcomeId()+"</outcomeId>\n" +
-//                            "\t\t\t\t<priceType>L</priceType>\n" +
-//                            "\t\t\t\t<priceNum>"+config.getPriceNum()+"</priceNum>\n" +
-//                            "\t\t\t\t<priceDen>"+config.getPriceDen()+"</priceDen>\n" +
-//                            "\t\t\t</part>\n" +
-//                            "\t\t</leg>\n" +
-//                            "\t</bet>\n" +
-//                            "</whoBets>")
-//            .when()
-//                    .post("bets/me/");
-    Response response2 =
+
+    Response betResponse =
             given()
                     .contentType("application/xml")
                     .header("who-apiKey", config.getApikey())
                     .header("who-secret", config.getApiSecret())
                     .header("who-ticket", config.getAuthenticationTicket())
                     .header("Accept", "application/xml")
-                    .body(bet)
+                    .body(whobets)
+                    .log().all()
             .when()
                     .post("bets/me/");
+  }
 
-    System.out.println(response2.asString());
+  @Test
+  public void betInsufficientFunds() {
 
+    getBalance();
+    String event = getRandomEvent();
+    getPricesOnRandomOutcome(event);
+    Response response =
+            given()
+                    .contentType(config.getContentType())
+                    .header("who-apiKey", config.getApikey())
+                    .header("who-secret", config.getApiSecret())
+                    .header("who-ticket", config.getAuthenticationTicket())
+                    .header("Accept", "application/xml")
+                    .formParam("legType", "W")
+                    .formParam("stake", String.valueOf(config.getBalance()+111.99))
+                    .formParam("outcomeId", config.getOutcomeId())
+                    .formParam("priceType", "L")
+                    .formParam("priceNum", config.getPriceNum())
+                    .formParam("priceDen", config.getPriceDen())
+                    .request()
+                    .when()
+                    .post("bets/me/");
+
+    XmlPath xmlPath = new XmlPath(response.asString());
+    String faultCode = xmlPath.getNode("whoBets").getNode("whoFaults")
+            .getNode("fault").getNode("faultCode").value();
+
+    Assert.assertEquals("23010", faultCode);
+  }
+
+  @Test
+  public void betStakeTooLow() {
+
+    getBalance();
+    String event = getRandomEvent();
+    getPricesOnRandomOutcome(event);
+    Response response =
+            given()
+                    .contentType(config.getContentType())
+                    .header("who-apiKey", config.getApikey())
+                    .header("who-secret", config.getApiSecret())
+                    .header("who-ticket", config.getAuthenticationTicket())
+                    .header("Accept", "application/xml")
+                    .formParam("legType", "W")
+                    .formParam("stake", "0.01")
+                    .formParam("outcomeId", config.getOutcomeId())
+                    .formParam("priceType", "L")
+                    .formParam("priceNum", config.getPriceNum())
+                    .formParam("priceDen", config.getPriceDen())
+                    .request()
+                    .when()
+                    .post("bets/me/");
+
+    XmlPath xmlPath = new XmlPath(response.asString());
+    String faultCode = xmlPath.getNode("whoBets").getNode("whoFaults")
+            .getNode("fault").getNode("faultCode").value();
+
+    Assert.assertEquals("23011", faultCode);
+  }
+
+  @Test
+  public void betStakeTooHigh(){
+
+    getBalance();
+    String event = getRandomEvent();
+    getPricesOnRandomOutcome(event);
+    getMaxStake();
+
+    Response response =
+            given()
+                    .contentType(config.getContentType())
+                    .header("who-apiKey", config.getApikey())
+                    .header("who-secret", config.getApiSecret())
+                    .header("who-ticket", config.getAuthenticationTicket())
+                    .header("Accept", "application/xml")
+                    .formParam("legType", "W")
+                    .formParam("stake", String.valueOf(Double.parseDouble(config.getMaxStake())+1.01))
+                    .formParam("outcomeId", config.getOutcomeId())
+                    .formParam("priceType", "L")
+                    .formParam("priceNum", config.getPriceNum())
+                    .formParam("priceDen", config.getPriceDen())
+                    .request()
+                    .when()
+                    .post("bets/me/");
+
+    XmlPath xmlPath = new XmlPath(response.asString());
+    String faultCode = xmlPath.getNode("whoBets").getNode("whoFaults")
+            .getNode("fault").getNode("faultCode").value();
+
+    Assert.assertEquals("23012", faultCode);
   }
 
   @Test
@@ -103,6 +167,7 @@ public class Bets extends TestBase{
                     .header("Accept", "application/json")
                     .when()
                     .get("bets/me?blockSize=5&blockNum=0&settled=Y");
-    System.out.println(response.asString());
+
+    /* TODO: Add verification/confirmation for bets */
   }
 }

@@ -8,6 +8,9 @@ import static com.jayway.restassured.RestAssured.given;
 
 public class LoginTest extends TestBase {
 
+  public LoginTest(){
+  }
+
   @Test
   public void getAuthenticationTicket_True(){
 

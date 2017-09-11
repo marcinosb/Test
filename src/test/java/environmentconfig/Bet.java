@@ -1,46 +1,30 @@
 package environmentconfig;
 
-public class Bet {
-  String whoBets = "";
-  String bet = "";
-  String betNum = "";
-  String delayBetId = "";
-  String betTypeCode = "";
-  String stake = "";
-  String leg = "";
-  String legType = "";
-  String part = "";
-  String outcomeId = "";
-  String priceType = "";
-  String priceNum  = "";
-  String priceDen = "";
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 
-  public Bet(String betNum, String delayBetId, String betTypeCode, String stake, String legType, String outcomeId, String priceType, String priceDen, String priceNum){
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Bet {
+  @XmlElement
+  String betNum = "";
+  @XmlElement
+  String delayBetId = "";
+  @XmlElement
+  String betTypeCode = "";
+  @XmlElement
+  String stake = "";
+  @XmlElement
+  Leg leg;
+
+  public Bet(){}
+
+  public Bet(String betNum, String delayBetId, String betTypeCode, String stake, Leg leg) {
     this.betNum = betNum;
     this.delayBetId = delayBetId;
     this.betTypeCode = betTypeCode;
     this.stake = stake;
-    this.legType = legType;
-    this.outcomeId = outcomeId;
-    this.priceDen = priceDen;
-    this.priceNum = priceNum;
-    this.priceType = priceType;
-  }
-
-  public String getWhoBets() {
-    return whoBets;
-  }
-
-  public void setWhoBets(String whoBets) {
-    this.whoBets = whoBets;
-  }
-
-  public String getBet() {
-    return bet;
-  }
-
-  public void setBet(String bet) {
-    this.bet = bet;
+    this.leg = leg;
   }
 
   public String getBetNum() {
@@ -75,59 +59,11 @@ public class Bet {
     this.stake = stake;
   }
 
-  public String getLeg() {
+  public Leg getLeg() {
     return leg;
   }
 
-  public void setLeg(String leg) {
+  public void setLeg(Leg leg) {
     this.leg = leg;
-  }
-
-  public String getLegType() {
-    return legType;
-  }
-
-  public void setLegType(String legType) {
-    this.legType = legType;
-  }
-
-  public String getPart() {
-    return part;
-  }
-
-  public void setPart(String part) {
-    this.part = part;
-  }
-
-  public String getOutcomeId() {
-    return outcomeId;
-  }
-
-  public void setOutcomeId(String outcomeId) {
-    this.outcomeId = outcomeId;
-  }
-
-  public String getPriceType() {
-    return priceType;
-  }
-
-  public void setPriceType(String priceType) {
-    this.priceType = priceType;
-  }
-
-  public String getPriceNum() {
-    return priceNum;
-  }
-
-  public void setPriceNum(String priceNum) {
-    this.priceNum = priceNum;
-  }
-
-  public String getPriceDen() {
-    return priceDen;
-  }
-
-  public void setPriceDen(String priceDen) {
-    this.priceDen = priceDen;
   }
 }

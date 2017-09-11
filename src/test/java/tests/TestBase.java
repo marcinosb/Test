@@ -5,6 +5,9 @@ import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.path.xml.XmlPath;
 import com.jayway.restassured.path.xml.element.Node;
 import com.jayway.restassured.response.Response;
+import environmentconfig.Leg;
+import environmentconfig.Part;
+import environmentconfig.WhoBetSlips;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
@@ -17,6 +20,8 @@ import static com.jayway.restassured.RestAssured.given;
 public class TestBase {
 
   public static TestData config;
+
+  public TestBase(){}
 
   @BeforeClass
   /* Setup a environment defaults */
@@ -95,10 +100,6 @@ public class TestBase {
     config.setPriceDen(outcomes.get(randomEvent).getNode("odds").getNode("livePrice").getNode("priceDen").value());
     config.setPriceFrac(outcomes.get(randomEvent).getNode("odds").getNode("livePrice").getNode("priceFrac").value());
     config.setPriceDec(outcomes.get(randomEvent).getNode("odds").getNode("livePrice").getNode("priceDec").value());
-//
-//    System.out.println(outcomes.size());
-//    System.out.println(outcomes.get(0));
-
   }
 
   /* Get actual user balance */
@@ -118,6 +119,31 @@ public class TestBase {
             .extract()
             .path("whoAccounts.account.balance");
     config.setBalance(balance);
+  }
+
+  /*Get max stake*/
+  public static void getMaxStake(){
+
+    WhoBetSlips whoBetSlips = new WhoBetSlips(new Leg("W"
+            , new Part(config.getOutcomeId(), "L", config.getPriceNum(), config.getPriceDen())));
+
+    Response response =
+            given()
+                    .contentType("application/xml")
+                    .header("who-apiKey", config.getApikey())
+                    .header("who-secret", config.getApiSecret())
+                    .header("who-ticket", config.getAuthenticationTicket())
+                    .header("Accept", "application/xml")
+                    .when()
+                    .body(whoBetSlips)
+                    .when()
+                    .post("betslips/me");
+
+    XmlPath xmlPath = new XmlPath(response.asString());
+
+    Node whoBetslips = xmlPath.get("whoBetslips");
+    String value = whoBetslips.getNode("bet").getNode("maxStake").value();
+    config.setMaxStake(value);
   }
 
   @AfterClass
